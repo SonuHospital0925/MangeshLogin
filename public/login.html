@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-900:#0F1B2D;
+    --ink-800:#16273D;
+    --ink-700:#1E3350;
+    --brass-500:#C9A876;
+    --brass-400:#DABE94;
+    --line:#2A3E5A;
+    --text-hi:#F2EFE8;
+    --text-lo:#9AAAC2;
+    --error:#E0705F;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(201,168,118,0.06), transparent 45%),
+      var(--ink-900);
+    color:var(--text-hi);
+    font-family:'Inter', sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:400px;
+    background:var(--ink-800);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:40px 36px 36px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg, transparent, var(--brass-500), transparent);
+  }
+  .mark{
+    width:34px; height:34px;
+    border:1.5px solid var(--brass-500);
+    border-radius:50%;
+    position:relative;
+    margin-bottom:20px;
+  }
+  .mark::after{
+    content:"";
+    position:absolute;
+    left:50%; top:50%;
+    width:5px; height:5px;
+    background:var(--brass-500);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:28px;
+    margin:0 0 6px;
+    letter-spacing:0.2px;
+  }
+  .sub{
+    font-size:13px;
+    color:var(--text-lo);
+    margin:0 0 30px;
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:0.3px;
+  }
+  form{display:flex; flex-direction:column; gap:18px;}
+  .field label{
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--brass-400);
+    margin-bottom:8px;
+  }
+  .input-wrap{position:relative;}
+  input[type="email"], input[type="password"], input[type="text"]{
+    width:100%;
+    background:var(--ink-700);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:14.5px;
+    color:var(--text-hi);
+    font-family:'Inter', sans-serif;
+    transition:border-color 0.15s ease;
+  }
+  input::placeholder{color:#5C6E8A;}
+  input:focus{
+    outline:none;
+    border-color:var(--brass-500);
+  }
+  .toggle-pass{
+    position:absolute;
+    right:12px; top:50%;
+    transform:translateY(-50%);
+    background:none; border:none;
+    color:var(--text-lo);
+    font-size:12px;
+    font-family:'JetBrains Mono', monospace;
+    cursor:pointer;
+    padding:4px;
+  }
+  .toggle-pass:hover{color:var(--brass-400);}
+  .error-msg{
+    font-size:12.5px;
+    color:var(--error);
+    margin-top:6px;
+    min-height:16px;
+    font-family:'JetBrains Mono', monospace;
+  }
+  .row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:13px;
+  }
+  .remember{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text-lo);
+    cursor:pointer;
+    user-select:none;
+  }
+  .remember input{width:14px; height:14px; accent-color:var(--brass-500);}
+  a{
+    color:var(--brass-400);
+    text-decoration:none;
+  }
+  a:hover{text-decoration:underline;}
+  button.submit{
+    margin-top:8px;
+    background:var(--brass-500);
+    color:var(--ink-900);
+    border:none;
+    border-radius:8px;
+    padding:13px;
+    font-size:14.5px;
+    font-weight:500;
+    font-family:'Inter', sans-serif;
+    cursor:pointer;
+    transition:background 0.15s ease, transform 0.05s ease;
+  }
+  button.submit:hover{background:var(--brass-400);}
+  button.submit:active{transform:scale(0.99);}
+  button.submit:disabled{opacity:0.6; cursor:not-allowed;}
+  .divider{
+    display:flex; align-items:center; gap:12px;
+    margin:26px 0 20px;
+    color:var(--text-lo);
+    font-size:11px;
+    font-family:'JetBrains Mono', monospace;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .divider::before, .divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+  .footer-note{
+    text-align:center;
+    font-size:13px;
+    color:var(--text-lo);
+    margin-top:4px;
+  }
+  .status-banner{
+    display:none;
+    background:rgba(201,168,118,0.1);
+    border:1px solid var(--brass-500);
+    color:var(--brass-400);
+    font-size:13px;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-bottom:18px;
+    font-family:'JetBrains Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="mark" aria-hidden="true"></div>
+  <h1>Welcome back</h1>
+  <p class="sub">sign in to continue</p>
+
+  <div class="status-banner" id="statusBanner"></div>
+
+  <form id="loginForm" novalidate>
+    <div class="field">
+      <label for="email">Email</label>
+      <div class="input-wrap">
+        <input type="email" id="email" placeholder="name@company.com" autocomplete="email">
+      </div>
+      <div class="error-msg" id="emailError"></div>
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <div class="input-wrap">
+        <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+        <button type="button" class="toggle-pass" id="togglePass">show</button>
+      </div>
+      <div class="error-msg" id="passwordError"></div>
+    </div>
+
+    <div class="row">
+      <label class="remember">
+        <input type="checkbox" id="remember">
+        Remember me
+      </label>
+      <a href="#" id="forgotLink">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="submit" id="submitBtn">Sign in</button>
+  </form>
+
+  <div class="divider">or</div>
+  <p class="footer-note">Don't have an account? <a href="/signup.html">Create one</a></p>
+</div>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
+  const togglePass = document.getElementById('togglePass');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusBanner = document.getElementById('statusBanner');
+  const forgotLink = document.getElementById('forgotLink');
+
+  togglePass.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    togglePass.textContent = isPassword ? 'hide' : 'show';
+  });
+
+  function showBanner(message, isError = false) {
+    statusBanner.textContent = message;
+    statusBanner.style.display = 'block';
+    statusBanner.style.borderColor = isError ? '#E0705F' : '';
+    statusBanner.style.color = isError ? '#E0705F' : '';
+  }
+
+  function validateEmail(value) {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(value);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    emailError.textContent = '';
+    passwordError.textContent = '';
+    statusBanner.style.display = 'none';
+
+    let hasError = false;
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email) {
+      emailError.textContent = 'Enter your email address.';
+      hasError = true;
+    } else if (!validateEmail(email)) {
+      emailError.textContent = 'That email doesn\'t look right.';
+      hasError = true;
+    }
+
+    if (!password) {
+      passwordError.textContent = 'Enter your password.';
+      hasError = true;
+    } else if (password.length < 8) {
+      passwordError.textContent = 'Password must be at least 8 characters.';
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in…';
+
+    try {
+      const remember = document.getElementById('remember').checked;
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, remember })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Incorrect email or password.');
+
+      showBanner('Signed in as ' + data.email + '. Redirecting…');
+      setTimeout(() => { window.location.href = '/dashboard.html'; }, 800);
+    } catch (err) {
+      showBanner(err.message || 'Something went wrong. Try again.', true);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign in';
+    }
+  });
+
+  forgotLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showBanner('Password reset flow goes here — hook this up to your backend.');
+  });
+</script>
+
+</body>
+</html>
